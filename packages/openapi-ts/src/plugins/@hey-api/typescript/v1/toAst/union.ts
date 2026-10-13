@@ -61,6 +61,13 @@ function baseNode(ctx: UnionResolverContext): Type {
       );
     }
 
+    // Null members are excluded from the discriminator data, but still belong to the union.
+    schemas.forEach((schema, index) => {
+      if (schema.type === 'null' || schema.const === null) {
+        members.push(childResults[index]!.type);
+      }
+    });
+
     return $.type.or(...members);
   }
 
